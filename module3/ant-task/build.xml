@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+
+
+<project name="Project_X" default="dist" basedir=".">
+
+<!-- set global properties for Project_X -->
+
+<property file="config/project.properties"/>
+
+<!-- Target checking -->
+
+
+<target name="check">
+<echo>Running Project_X</echo>
+</target>
+
+
+<!-- Target cleaning -->
+
+
+<target name="clean" depends="check">
+<delete dir="${build}"/>
+<delete dir="${dist}"/>
+<echo> I cleaned all folders </echo>
+</target>
+
+
+<!-- Target init -->
+
+<target name="init" depends="clean" >
+
+<!-- Create the time stamp -->
+
+<tstamp/>
+<echo>I created TimeStamp ${DSTAMP}-${TSTAMP}</echo>
+
+<!-- Create the directory -->
+
+<mkdir dir="${build}"/>
+</target>
+
+<!-- Target compiling -->
+
+<target name="compile" depends="init" >
+<echo>I created path to lib</echo>
+<path id="compile.path">
+<fileset dir="lib">
+<include name="commons-collections-3.2.1.jar" />
+</fileset>
+</path>
+<echo>I compiled .java to .class with lib</echo>
+<javac srcdir="${src}" destdir="${build}" includeantruntime="false" classpathref="compile.path"/>
+</target>
+
+<!-- Target test -->
+
+<target name="test" depends="compile" description="compile the test">
+
+<!-- Add lib -->
+
+<path id="libs">
+<fileset dir="lib" includes="*.jar"/>
+</path>
+
+<!-- Compile .class for test -->
+
+<javac srcdir="${test}" destdir="${test}" classpathref="libs" includeantruntime="false" />
+
+<!-- Test Junit -->
+
+<junit printsummary="yes" haltonfailure="no">
+<classpath path="${lib}"> 
+<path refid="libs" />
+</classpath>  
+<batchtest fork="yes" >
+<fileset dir="${test}">
+<include name="*.java"/>
+</fileset>
+</batchtest>
+</junit>
+<echo>Test My congratulations</echo>
+</target>
+
+<!-- Target jar -->
+
+<target name="jar" depends="compile" >
+<echo> I created folder ${dist} </echo>
+<mkdir dir="${dist}"/>
+<echo> I created .jar from .class </echo>
+<jar jarfile="${dist}/${DSTAMP}-${TSTAMP}-charches.jar" basedir="${build}"/>
+</target>
+
+<!-- Target dist -->
+
+<target name="dist" depends="jar" >
+<echo> Creating folder and coping all files which it need </echo>
+<mkdir dir="${DSTAMP}-${TSTAMP}-Charches"/>
+<copy file="${dist}/${DSTAMP}-${TSTAMP}-charches.jar" todir="${DSTAMP}-${TSTAMP}-Charches" />
+<copy todir="${DSTAMP}-${TSTAMP}-Charches"> <fileset dir="lib"/> </copy>
+<copy file="config/project.properties" todir="${DSTAMP}-${TSTAMP}-Charches" />
+<tar destfile="${DSTAMP}-Charches.tar" basedir="${DSTAMP}-${TSTAMP}-Charches" />
+<delete dir="${DSTAMP}-${TSTAMP}-Charches" />
+
+</target>
+
+</project>
+
