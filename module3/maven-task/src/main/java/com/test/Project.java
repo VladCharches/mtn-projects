@@ -15,12 +15,6 @@ class Project {
 
 }
 
-public class Shalom {
 
-    public static void main(String[] args) {
-        // Prints "SHALOM" to the terminal window.
-        System.out.println("Shalom");
-    }
 
-}
 
